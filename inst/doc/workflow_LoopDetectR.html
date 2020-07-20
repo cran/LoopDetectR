@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Installation</title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: #990073
+   }
+
+   pre .number {
+     color: #099;
+   }
+
+   pre .comment {
+     color: #998;
+     font-style: italic
+   }
+
+   pre .keyword {
+     color: #900;
+     font-weight: bold
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: #d14;
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+<!-- MathJax scripts -->
+<script type="text/javascript" src="https://cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<h2>Installation</h2>
+
+<p>LoopDetectR is on CRAN and can be installed within R by</p>
+
+<pre><code class="r"># Download and install
+install.packages(&quot;LoopDetectR&quot;)
+</code></pre>
+
+<p>Alternatively, you can install the package from gitlab. Call the following 
+commands in an R session. </p>
+
+<pre><code class="r"># Install the package including the vignette and the manual
+remotes::install_gitlab(&quot;kabaum/LoopDetectR&quot;, build_manual=TRUE, 
+                        build_vignettes = TRUE)
+</code></pre>
+
+<p>After installation, load the package.</p>
+
+<pre><code class="r"># Load package
+library(&quot;LoopDetectR&quot;)
+</code></pre>
+
+<h2>In brief and quick start</h2>
+
+<p>The package LoopDetectR enables determining all feedback loops of
+an ordinary differential equation (ODE) system at user-defined values of 
+the model parameters and of the modelled variables.</p>
+
+<p>The following call reports (up to 10) feedback loops for an ODE system 
+determined by a function, here the example function <code>func_POSm4</code>, at variable 
+values <code>s_star</code> (here, these are all equal to 1). Additional arguments to the 
+example function are supplied. </p>
+
+<pre><code class="r"># Load example ODE system with function func_POSm4, 4 variables
+data(&quot;func_POSm4&quot;)
+# Example variable values
+s_star &lt;- rep(1,4)
+# Further arguments of func_POSm4, in addition: time t as argument
+klin &lt;- rep(1,8)
+knonlin &lt;- c(2.5,3)
+
+# compute loops
+res_tab &lt;- find_loops_vset(func_POSm4,vset=list(s_star),t=1,klin=klin,
+                           knonlin=knonlin,max_num_loops=10)
+# The loop list is reported
+res_tab$loop_rep[[1]]
+</code></pre>
+
+<pre><code>##           loop length sign
+## 1         1, 1      1   -1
+## 2         2, 2      1   -1
+## 3         3, 3      1   -1
+## 4         4, 4      1   -1
+## 5 3, 4, 1,....      4   -1
+## 6   3, 4, 2, 3      3    1
+</code></pre>
+
+<pre><code class="r"># This is the sixth loop of the list. It is a positive feedback loop (sign in 
+# the loop list equals +1) of length 3 in that variable 3 regulates variable 4, 
+# variable 4 regulates variable 2, and variable 2 regulates variable 3. 
+res_tab$loop_rep[[1]][6,]
+</code></pre>
+
+<pre><code>##         loop length sign
+## 6 3, 4, 2, 3      3    1
+</code></pre>
+
+<pre><code class="r"># The corresponding signed Jacobian matrix
+res_tab$jac_rep[[1]]
+</code></pre>
+
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]   -1    0    0   -1
+## [2,]    1   -1    0    1
+## [3,]    0    1   -1    0
+## [4,]    0    0    1   -1
+</code></pre>
+
+<h2>Introduction</h2>
+
+<p>Ordinary differential equation (ODE) models are used frequently to
+mathematically represent biological systems. Feedback loops are important 
+regulatory features of biological systems and can give rise to different
+dynamic behavior such as multistability for positive feedback loops or
+oscillations for negative feedback loops.</p>
+
+<p>The feedback loops in an ODE system can be detected with the help of its 
+Jacobian matrix, the matrix of partial derivatives of the variables. 
+It captures all interactions between the variables and gives rise to the
+interaction graph of the ODE model. In this graph, each modelled variable
+is a node and non-zero entries in the Jacobian matrix are (weighted) 
+edges of the graph. Interactions can be positive or negative, according 
+to the sign of the Jacobian matrix entry.</p>
+
+<p>Directed path detection in this graph is used to determine all feedback 
+loops (in graphs also called cycles or circuits) of the system. They are
+marked by a set of directed interactions forming a chain in which only 
+the first and the last node (variable) is the same. Thereby, self-loops 
+(loops of length one) can also occur.</p>
+
+<p>LoopDetectR allows for detection of all loops of the graph and also reports
+the sign of each loop, i.e. whether it is a positive feedback loop
+(the number of negative interactions is even) or a negative feedback loop 
+(the number of negative interactions is uneven).
+The output is a table that captures the order of the variables forming 
+the loop, their length and the sign of each loop. </p>
+
+<p>Jacobian determination in LoopDetectR relies on the package <code>numDeriv</code>, and path 
+finding in graphs uses algorithms supplied in the package <code>igraph</code>. </p>
+
+<h2>Solving the ODE model to generate variable values of interest</h2>
+
+<p>Solving an ODE model can be performed with the package <code>deSolve</code>.
+Note: You can skip this step if you already have a point of interest in state 
+space, or if you want to use dummy values for the variables such as 
+<code>s_star &lt;- 1:4</code>.</p>
+
+<pre><code class="r"># Load example ODE system with function func_POSm4, 
+# Positive feedback chain model from [Baum et al., 2016], 4 variables
+data(func_POSm4)
+# The function func_POSm4 returns a vector, but deSolve needs the vector within
+# a list as output. Therefore, we define a function that simply puts the output 
+# of func_POSm4 into a list:
+func_POSm4_list &lt;- function(t,x,klin,knonlin){list(func_POSm4(t,x,klin,knonlin))}
+# Kinetic parameters of the model, supplied as arguments to func_POSm4
+klin &lt;- c(165,0.044,0.27,550,5000,78,4.4,5.1)
+knonlin &lt;- c(0.3,2)
+# Solve the system using deSolve
+sol &lt;-  deSolve::ode(y = rep(1,4), times = seq(0,15,0.1), func = func_POSm4_list, 
+                     parms=klin, knonlin=knonlin)
+# The solution of the 4-variable system is oscillatory, showing only the first 
+# variable here
+plot(sol[,1],sol[,2],type=&#39;l&#39;,xlab=&#39;time&#39;,ylab =&#39;variable 1&#39;)
+</code></pre>
+
+<p><img src="data:image/png;base64,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JJBBAlTwGaxUFokESIAESIAEqODZBkiABEiABEgggwSo4DNYqSwSCZAACZAACVDBsw2QAAmQAAmQQAYJUMFnsFJZJBIgARIgARKggmcbIAESIAESIIEMEqCCz2ClskgkQAIkQAIkQAXPNkACJEACJEACGSRABZ/BSmWRSIAESIAESIAKnm2ABEiABEiABDJIgAo+g5XKIpEACZAACZAAFTzbAAmQAAmQAAlkkAAVfAYrlUUiARIgARIgASp4tgESIAESIAESyCABKvgMViqLRAIkQAIkQAJU8GwDJEACJEACJJBBAlTwGaxUFokESIAESIAEqODZBkiABEiABEgggwSo4DNYqSwSCZAACZAACVDBsw2QAAmQAAmQQAYJUMFnsFJZJBIgARIgARKoX00IHnjgAdm8eXM1FZllJQESIAES8EigTZs2MmLECC8S1Nu6LXl5suOHPvjggzJp0iQZO3as4yfzcSRAAiRAAtVK4I9//KPcfffdsueeezpHUDUWPCz3MWPGyLnnnuscMh9IAiRAAiRQnQTmz58vW7Zs8VJ4zsF7wc6HkgAJkAAJkIBdAlTwdvkydxIgARIgARLwQoAK3gt2PpQESIAESIAE7BKggrfLl7mTAAmQAAmQgBcCVPBesPOhJEACJEACJGCXABW8Xb7MnQRIgARIgAS8EKCC94KdDyUBEiABEiABuwSo4O3yZe4kQAIkQAIk4IUAFbwX7HwoCZAACZAACdglQAVvly9zJwESIAESIAEvBKjgvWDnQ0mABEiABEjALgEqeLt8U53766+/LosWLUp1GSg8CZAACVQrASr4aq35MuX+4IMP5Oc//7ncd999Ze7kxyRAAiRAAhoJUMFrrBUFMv3hD3+QX/ziFzJz5kxvJyEpwEARSIAESCC1BKjgU1t19gSfPn26bN26VY477jhp3769zJkzx97DmDMJkAAJkIAVAlTwVrCmN9M1a9bI7bffLhdffHFQiGHDhsmzzz6b3gJRchIgARKoUgJU8FVa8cWK/cwzz8i+++4rPXv2DG4ZOnSovPDCC3TTFwPG6yRAAiSglAAVvNKK8SXWU089JcOHD695fLt27aRt27by5ptv1lzjGxIgARIgAf0E1Cn4zZs3y6pVq/STy6CEK1asCJbFwYLPTVD4sOyZSIAESIAE0kNAhYLftGmTjB8/Xjp37iwNGzaU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flgzw4pkW7p0qeAEObi605ig4NMWZPfVV1/J8ccfH+zMuGXLljRip8wkQAIkUDEBFQoeJ9Y988wzBYWfNm2atG7duuBnabyY5gA78E5jkN2kSZOCExGxNXCxdqa9LSE25fHHH9cuZkH50jYgLFiIlF9cvXq1oA0xVRcBFQp+woQJgn/77befnHbaacF+96eeeqrsscce8te//lV++9vfZqZW0rxEDpWQtiC7J554QhYtWiRnn312cCrin//859S1pffeey+Q//7775fnnnsudfL/6U9/kquuuiqYckud8NsExgmagwYNknfeeSeN4geD2t69e8u9996bOvkxdXvssccG7X7r1q2pk9+3wCoU/MCBA2X27Nly7bXXysiRI6Vbt25y6KGHyh//+MfgR5XGQ1mKVWzaFXya5uC//PLLoHOeOHGiNGjQQPbZZx9p1KiRvPDCC8WqR931F198URCjcsYZZ8hhhx0mb731ljoZSwn0z3/+U/7+979Lv379ggOrjjrqqFK3q/vszTfflGeffVauuOKK4PhsdQKWEejyyy+XO++8UzDQRT2kKUGh//KXv5RRo0YFhh5is6DwmaITUBFkB3HR8Q4fPjxwI61du1Z23nnn6KVI0Z1w0WPwktYERZmWeex//OMfwUqMdu3a1eCGokSHN2TIkJprmt/86le/CpTLiBEj5N1335XrrrtOs7h1ZIP1PnbsWDnyyCODf8cdd1yde7ReQGAmBoeXXnqp7LvvvvK///u/gjaF92lIs2bNCgwknAaKY77XrVsny5cvT82UJwZWiMU677zzAtwow4cffii5v+c01INPGVVY8NW0TC7NS+TQULGMER1fGtLTTz8tUIy56YADDghWZeA0P+0Jg0EsGR06dGggKtysy5YtEwQNpiHNnz8/6JAPP/zwQFxYYDh/AfPBaUgYCMJrgqlDBP6eddZZqbLiH3vssWBqB4oRCVOe8EikJd11112B5yqUF55cBCkzRSegQsHDBQlXHpbJYXkcLER0ZLfddpvcfPPNctNNN0Uq0TfffCNff/11wX8YRPi2PDGCxr9WrVpFKo/Gm9BZpCFYB+3o7bffFij0/ISDftIwSEGAKdyT4YoLvCIgNS1ueljviKkJFQzqActD09BJo41DQf7oRz+qaT4HH3ywbL/99qmIg8BmYa+//roccsghNfLvueeeqVHw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cA/DwtSeCgXZPfjgg/KjH/1I1eEmhThCdqwCgLWbmx599FE56qijci+pfZ9vhcHlDf6nnnqqWplzBUPwbe48PDZXQVxBGg43wQ51//d//5dbHIHnDbseYvpBe8pvO5D3jjvukJNPPjkYvGiX35Z8VPAVkGUE/fewoszBI7gOCka7ezssVRgjgDgLJChMzOEdffTR4S1qX+FRAef77ruvRkYoewTYpWV7znwrDNYvNifRHPtQA3vbG1jwuZvdYHBy/PHH596i9v0xxxwTKHS0eSTs+wD50zI4zG87sNzhOcTgvJoTFXwFtc8I+u9hRVHwmP/afffdU+EeDkuWa8VjcALXfKj4w3u0vqKTxo5dODQHHfS1114r5513XmrOTci1wrD2Gt6fH//4x1px15EL03foI5DCqalRo0bVuU/jBbRxWPGPPPJIIB4Giggm1nhuRCF+uW0Hn991111y0kknpcJzWKg8pq5RwVdAEu43roH/DliUOfg0WTBhMwjn4TH3jk7utNNOCz9S/4pODgFFUIwYnCBwKk27d8EKCzcrQduBcklTzAtkhQWPHQWvvPJKOeWUU1SvHc9v0IgVQNtZuXKl3HPPPXLBBRfk36L279y2g7l37HyYFu+JTaj6I1dslr7CvOmi/x5YuTl4nJsOK3LgwIHffykF72DBw6195513yr/+67+qO9qzHEJ00uecc04QMzB58uRyt6v6HBvBXHjhhfKXv/wliCV46KGHVMlXTpjQRX/FFVcIynL66aeX+4qqz8No/4kTJwq8QWnakhveBkynjR07VjA4P+uss1I1uLLVEKjgI5LFqBxuwzQEnEQsUqLbSrnosTHMf/7nf8qZZ56ZuiWFUPA33nhjYAlr35inUAVCycALgXX76LDTlLCUD9sZ4zhmLEdNQ2BmLl+s43/88ceDaZ2LLroo96PUvEccBwYo//7v/54amSFomzZt5O9//3sgM6Ybmjdvnir5bQlLBR+RLCPoa4MqtQ7+b3/7m7Rs2VL90rLaJfruLyjHM844I9XBOTfddFOhoqXi2m677ZYKOYsJCa9VmhPm4WEJpzF17do1jWJblZkKPiJeBtjVBlXMgl+zZk3g3r7++utrfyElf8G1qnnP8JRgpJgkQAIKCDDILmIlcP69NqhiQXa33357sC0nTm9iIgESIAES8EeACj4ie0bQ1wZVKMgO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" alt="plot of chunk solving_ODE"/></p>
+
+<pre><code class="r"># Set the last point of the numeric solution as point of interest, omit the 
+# first column (it contains the time)
+s_star &lt;- sol[dim(sol)[1],2:dim(sol)[2]]
+</code></pre>
+
+<p>State variable values of interest could be steady state values,
+values at a specific point in time (e.g. after a stimulus) or even a set 
+of values (see section <em>Determining loops over a set of variable values</em>). </p>
+
+<h2>Calculating the Jacobian matrix</h2>
+
+<p>The function <code>jacobian</code> from the <code>numDeriv</code> package can be used to determine 
+numerically the Jacobian matrix of an ODE system at a certain set of values 
+for the variables, <code>s_star</code>. 
+The approach is that of finite differences (with real step) or 
+complex step approach, the latter of which is supposed to deliver more exact 
+results [Martins et al., 2003]. </p>
+
+<p>The input function, in the example <code>func_POSm4</code> (positive feedback chain model 
+from [Baum et al., 2016]) defines the time derivatives of the modelled variables 
+as a vector:  \(f_i(s)=dS_i/dt\). Note that only those input arguments to the 
+function that encode the modelled variables (and hence in whose direction the 
+partial derivatives are taken) are allowed to be called <code>x</code>.</p>
+
+<pre><code class="r">klin &lt;- c(165,0.044,0.27,550,5000,78,4.4,5.1)
+knonlin &lt;- c(0.3,2)
+j_matrix &lt;- numDeriv::jacobian(func_POSm4,s_star,method=&quot;complex&quot;,
+                               t=1,klin=klin,knonlin=knonlin,)
+j_matrix
+</code></pre>
+
+<pre><code>##            [,1]  [,2]  [,3]     [,4]
+## [1,] -1.2396132     0   0.0 -85.9719
+## [2,]  0.9696132 -5550   0.0  85.9719
+## [3,]  0.0000000   550 -82.4   0.0000
+## [4,]  0.0000000     0  78.0  -5.1000
+</code></pre>
+
+<pre><code class="r">signed_jacobian &lt;- sign(j_matrix)
+</code></pre>
+
+<p>The (i,j)th entry of the Jacobian matrix denotes the partial derivative
+of variable \(S_i\) with respect to variable \(S_j\), 
+\(J_{ij}=\delta S_i/\delta S_j\), which is positive if \(S_j\) has a direct positive 
+effect on \(S_i\), negative if \(S_j\) has a direct negative effect on \(S_i\) and zero
+if \(S_j\) does not have a direct effect on \(S_i\). For example, the entry in row 2,
+column 4, \(J_{24}\), of the <code>signed_jacobian</code> matrix above is positive, meaning that
+in the underlying ODE model, variable 4 positively regulates variable 1.</p>
+
+<h2>Computing all feedback loops and useful functions for loop search</h2>
+
+<p>The Jacobian matrix is used to compute feedback loops in the generated 
+interaction graph. The default function for this is <code>find_loops</code>, in that 
+strongly 
+connected components are determined to reduce runtime. For smaller
+systems, the function <code>find_loops_noscc</code> skips this step and thus can be
+faster. The optional second input argument, <code>max_num_loops</code>, sets an upper 
+limit to the number of detected and reported loops and thus can prevent overly 
+long runtime (but also potentially not all loops are returned).</p>
+
+<pre><code class="r"># Determine the loop_list from Jacobian matrix j_matrix
+loop_list &lt;- find_loops(j_matrix)
+loop_list
+</code></pre>
+
+<pre><code>##           loop length sign
+## 1         1, 1      1   -1
+## 2         2, 2      1   -1
+## 3         3, 3      1   -1
+## 4         4, 4      1   -1
+## 5 3, 4, 1,....      4   -1
+## 6   3, 4, 2, 3      3    1
+</code></pre>
+
+<pre><code class="r"># The signed Jacobian matrix can be supplied instead, delivering the same results
+loop_list &lt;- find_loops(signed_jacobian)
+loop_list
+</code></pre>
+
+<pre><code>##           loop length sign
+## 1         1, 1      1   -1
+## 2         2, 2      1   -1
+## 3         3, 3      1   -1
+## 4         4, 4      1   -1
+## 5 3, 4, 1,....      4   -1
+## 6   3, 4, 2, 3      3    1
+</code></pre>
+
+<p>The output loop list is an R data.frame with one row for each detected loop. 
+The column 
+<code>loop</code> contains the order of the variables that form the loop (as vector in a
+list); <code>length</code> contains the loop length (i.e. the number of variables involved);
+<code>sign</code> denotes whether the loop is negative, <code>-1</code>, or positive, <code>1</code>.
+The data.frame can be queried as usual for single loops or loops of a certain 
+length or sign. </p>
+
+<pre><code class="r"># Retrieve fifth loop
+loop_list[5,1] 
+</code></pre>
+
+<pre><code>## [[1]]
+## [1] 3 4 1 2 3
+</code></pre>
+
+<pre><code class="r"># In order to obtain the vector of the order of variables of a loop, you have to 
+# call the list element
+loop_list[5,1][[1]]
+</code></pre>
+
+<pre><code>## [1] 3 4 1 2 3
+</code></pre>
+
+<pre><code class="r"># Retrieve all loops of length 4
+loop_list[loop_list$length==4,] 
+</code></pre>
+
+<pre><code>##           loop length sign
+## 5 3, 4, 1,....      4   -1
+</code></pre>
+
+<p>The LoopDetectR function <code>loop_summary</code> provides a convenient report on total 
+number of loops, subdivided by their lengths (<code>len_i</code>) and signs (<code>all</code>, <code>pos</code>,
+<code>neg</code>).</p>
+
+<pre><code class="r">loop_summary(loop_list)
+</code></pre>
+
+<pre><code>##     len_1 len_2 len_3 len_4
+## all     4     0     1     1
+## pos     0     0     1     0
+## neg     4     0     0     1
+</code></pre>
+
+<p>One can filter the loop list for loops containing specific variables, for 
+example the one with index 2:</p>
+
+<pre><code class="r"># Index of node of interest
+noi &lt;- 2
+# Return all loops from loop_list containing node 2
+loop_list[vapply(loop_list$loop,function(x){noi %in% x},logical(1)),]
+</code></pre>
+
+<pre><code>##           loop length sign
+## 2         2, 2      1   -1
+## 5 3, 4, 1,....      4   -1
+## 6   3, 4, 2, 3      3    1
+</code></pre>
+
+<p>The LoopDetectR function <code>find_edge</code> can be used to search a loop list for loops 
+containing specific edges defined by the indices of the ingoing and outgoing 
+nodes. This example returns the indices of all loops with a regulation of node 
+3 by node 2. These are only two here.</p>
+
+<pre><code class="r"># Obtain the indices of the loops with edge &#39;2 regulates 3&#39; in loop_list 
+loop_edge_ind &lt;- find_edge(loop_list,source_node=2,target_node=3);
+loops_with_edge_2_to_3 &lt;- loop_list[loop_edge_ind,]
+loops_with_edge_2_to_3
+</code></pre>
+
+<pre><code>##           loop length sign
+## 5 3, 4, 1,....      4   -1
+## 6   3, 4, 2, 3      3    1
+</code></pre>
+
+<p>Loop lists can be saved and loaded as R objects using the usual save (or 
+saveRDS) and load (loadRDS) R functions. Saving the loop list into table files 
+is possible, but the vectors containing the loops are saved as string 
+<code>&quot;c(x,y,z)&quot;</code> and need special handling when loading back into R or into other 
+programming language frameworks.</p>
+
+<pre><code class="r"># This writes a file &#39;looplist_func_POSm4.RData&#39;
+save(loop_list,file=file.path(tempdir(),&#39;looplist_func_POSm4.RData&#39;)) 
+# This loads the object &#39;loop_list&#39; into the workspace
+load(file.path(tempdir(),&#39;looplist_func_POSm4.RData&#39;))
+
+# This saves the loop list into a table with separation by tab
+write.table(loop_list,file=file.path(tempdir(),&#39;looplist_func_POSm4.txt&#39;),
+            sep=&#39;\t&#39;,quote=F,row.names=F)
+# This reads the loop list back into the R session, as object ll
+ll &lt;- read.table(file.path(tempdir(),&#39;looplist_func_POSm4.txt&#39;),
+                 header=T,sep=&#39;\t&#39;)
+ll
+</code></pre>
+
+<pre><code>##               loop length sign
+## 1          c(1, 1)      1   -1
+## 2          c(2, 2)      1   -1
+## 3          c(3, 3)      1   -1
+## 4          c(4, 4)      1   -1
+## 5 c(3, 4, 1, 2, 3)      4   -1
+## 6    c(3, 4, 2, 3)      3    1
+</code></pre>
+
+<pre><code class="r"># This transforms the &quot;c(x,y,z)&quot;-entries into the format used by LoopDetectR
+ll$loop &lt;- lapply(ll$loop,function(x){eval(parse(text=x))})
+ll
+</code></pre>
+
+<pre><code>##            loop length sign
+## 1          1, 1      1   -1
+## 2          2, 2      1   -1
+## 3          3, 3      1   -1
+## 4          4, 4      1   -1
+## 5 3, 4, 1, 2, 3      4   -1
+## 6    3, 4, 2, 3      3    1
+</code></pre>
+
+<h2>Computing feedback loops over multiple sets of variable values of interest</h2>
+
+<p>In this example of a model of the bacterial cell cycle [Li et al., 2008],
+it is demonstrated how feedback loops can be determined over multiple sets of
+variable values. Here, it is focused on the solution of the ODE
+systems along the time axis (provided as data in the package, 
+<em>li08_solution.RData</em>).</p>
+
+<pre><code class="r"># Load in the example ODE model function func_li08, the kinetic parameters are
+# defined within the function, and the function returns a vector of the time
+# derivatives (in the same order as the modelled variables in the arguments)
+data(&quot;func_li08&quot;)
+# Load sets of variable values (solution to the ODE over time)
+data(&quot;li08_solution&quot;) #loads the data.frame li08_solution, columns: variables
+# Cast the solution into the correct list format and remove time (first column)
+li08_sol_list &lt;- as.list(as.data.frame(t(li08_solution[,-1])))
+# Compute all different loop lists along the solution
+res_tab &lt;- find_loops_vset(func_li08,vset=li08_sol_list,t=1,
+                           compute_full_list=FALSE)
+</code></pre>
+
+<p>The solutions of the example ODE model give rise to seven different loop lists 
+that are saved as elements of the list <code>res_tab$loop_rep</code>.
+Here, two examples of resulting loop lists are given (without
+self-loops).</p>
+
+<pre><code class="r">loop_list_2 &lt;- res_tab$loop_rep[[2]][res_tab$loop_rep[[2]]$length&gt;1,]
+loop_list_2
+</code></pre>
+
+<pre><code>##          loop length sign
+## 16 6, 7, 1, 6      3   -1
+## 17    6, 7, 6      2    1
+## 18    2, 3, 2      2   -1
+</code></pre>
+
+<pre><code class="r">loop_list_7 &lt;- res_tab$loop_rep[[7]][res_tab$loop_rep[[7]]$length&gt;1,]
+loop_list_7
+</code></pre>
+
+<pre><code>##            loop length sign
+## 15      1, 2, 1      2   -1
+## 16   1, 3, 2, 1      3    1
+## 17      2, 3, 2      2   -1
+## 18 5, 7, 1,....      4   -1
+## 19 6, 7, 1,....      5    1
+## 20   6, 7, 1, 6      3   -1
+## 21      6, 7, 6      2    1
+## 22 10, 11, ....      6    1
+## 23 10, 12, ....      3   -1
+## 24 10, 13, ....      4   -1
+## 25 10, 14, ....      8   -1
+## 26 10, 14, ....      7    1
+</code></pre>
+
+<p>The entry <code>res_tab$loop_rep_index</code> is a vector of the same length as the 
+number of different states at which the loops were determined 
+(<code>length(li08_sol_list)</code>), and returns which entry of <code>res_tab$loop_rep</code> belongs
+to each input state.</p>
+
+<pre><code class="r"># Determine the loop list belonging to the 10th up to 20th input state. 
+# It is loop_list_2 for all of these input states.
+res_tab$loop_rep_index[10:20]
+</code></pre>
+
+<pre><code>##  [1] 2 2 2 2 2 2 2 2 2 2 2
+</code></pre>
+
+<p>Similarly, <code>res_tab$jac_rep</code> and <code>res_tab$jac_rep_index</code> capture the different
+Jacobian matrices and for each input state which Jacobian belongs to it.</p>
+
+<p>Results of this analysis could be plotted along the solution and analyzed
+further to discover reasons of changing loops. Please note that in order 
+to obtain the sample solution in <em>li08_solution.RData</em> also event functions
+are required; the solution cannot be retrieved from integrating 
+<code>func_li08</code> alone. Please refer to the model&#39;s publication [Li et al.,
+2008] for details.</p>
+
+<h2>Comparing two loop lists</h2>
+
+<p>LoopDetectR provides a function for comparing the loops of two systems, 
+<code>compare_loop_list</code>. For a meaningful comparison, the loop indices in
+the compared systems should point to the same variables. This could be the case 
+when regulations change within one system between different sets of variables of 
+interest (along a dynamic trajectory, at different steady states of the system),
+or when comparing different systems in which one or more regulations are altered 
+(as in the below example the positive feedback chain model vs. the negative 
+feedback chain model, [Baum et al., 2016]).</p>
+
+<pre><code class="r"># Load the ODE function of the positive feedback chain model
+data(func_POSm4)
+# Set kinetic parameters
+klin &lt;- c(165,0.044,0.27,550,5000,78,4.4,5.1)
+knonlin &lt;- c(0.3,2)
+# Compute the Jacobian matrix of the system at the state [1,1,1,1]
+j_matrix &lt;- numDeriv::jacobian(func_POSm4,rep(1,4),method=&quot;complex&quot;,
+                               t=1, klin=klin, knonlin=knonlin)
+# Compute all loops for this Jacobian
+loop_list_pos &lt;- find_loops(j_matrix)
+
+# Function with negative regulation. The altered regulation affects 
+# two entries of the Jacobian matrix. Parameter values and the set of 
+# variable values remain identical.
+j_matrix_neg &lt;- sign(j_matrix)
+j_matrix_neg[1:2,4] &lt;- -sign(j_matrix[1:2,4])
+# Compute the loop list for this Jacobian with altered regulation
+loop_list_neg &lt;- find_loops(j_matrix_neg);
+
+# Compute comparison
+comp_inds &lt;- compare_loop_list(loop_list_pos,loop_list_neg)
+# Only the four self-loops remain identical in both systems (saved in ind_a_id).
+loop_list_pos[comp_inds$ind_a_id,]
+</code></pre>
+
+<pre><code>##   loop length sign
+## 1 1, 1      1   -1
+## 2 2, 2      1   -1
+## 3 3, 3      1   -1
+## 4 4, 4      1   -1
+</code></pre>
+
+<pre><code class="r"># ind_b_id saves the indices of the corresponding loops in the negatively 
+# regulated system.
+loop_list_neg[comp_inds$ind_b_id,]
+</code></pre>
+
+<pre><code>##   loop length sign
+## 1 1, 1      1   -1
+## 2 2, 2      1   -1
+## 3 3, 3      1   -1
+## 4 4, 4      1   -1
+</code></pre>
+
+<pre><code class="r"># Two loops are the same in both systems but they have switched their signs. 
+# Their indices in the first list are saved in ind_a_switch
+loop_list_pos[comp_inds$ind_a_switch,]
+</code></pre>
+
+<pre><code>##           loop length sign
+## 5 3, 4, 1,....      4   -1
+## 6   3, 4, 2, 3      3    1
+</code></pre>
+
+<pre><code class="r"># Their indices in the second list are saved in ind_b_switch 
+loop_list_neg[comp_inds$ind_b_switch,]
+</code></pre>
+
+<pre><code>##           loop length sign
+## 5 3, 4, 1,....      4    1
+## 6   3, 4, 2, 3      3   -1
+</code></pre>
+
+<pre><code class="r"># All loops in the positively regulated system do also occur in the negatively
+# regulated system, i.e. ind_a_notin is empty.
+comp_inds$ind_a_notin
+</code></pre>
+
+<pre><code>## integer(0)
+</code></pre>
+
+<h2>References</h2>
+
+<p>Baum K, Politi AZ, Kofahl B, Steuer R, Wolf J. Feedback, Mass 
+Conservation and Reaction Kinetics Impact the Robustness of Cellular 
+Oscillations. PLoS Comput Biol. 2016;12(12):e1005298.</p>
+
+<p>Li S, Brazhnik P, Sobral B, Tyson JJ. A Quantitative Study of the 
+Division Cycle of Caulobacter crescentus Stalked Cells. Plos Comput Biol. 
+2008;4(1):e9.</p>
+
+<p>Martins JRRA, Sturdza P, Alonso JJ. The complex-step derivative 
+approximation. ACM Trans Math Softw. 2003;29(3):245–62.</p>
+
+</body>
+
+</html>

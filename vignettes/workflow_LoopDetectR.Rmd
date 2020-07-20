@@ -1,0 +1,380 @@
+---
+title: "LoopDetectR: Comprehensive Feedback Loop Detection in ODE models"
+author: "Katharina Baum"
+date: "07/06/2020"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{LoopDetectR: Comprehensive Feedback Loop Detection in ODE models}
+  %\usepackage[UTF-8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Installation
+
+LoopDetectR is on CRAN and can be installed within R by
+
+```{r install_fromCRAN, eval=FALSE}
+# Download and install
+install.packages("LoopDetectR")
+```
+
+Alternatively, you can install the package from gitlab. Call the following 
+commands in an R session. 
+
+```{r install_fromgit, message=FALSE, results='hide', eval=FALSE}
+# Install the package including the vignette and the manual
+remotes::install_gitlab("kabaum/LoopDetectR", build_manual=TRUE, 
+                        build_vignettes = TRUE)
+
+```
+
+After installation, load the package.
+```{r load_package}
+# Load package
+library("LoopDetectR")
+```
+
+## In brief and quick start
+
+The package LoopDetectR enables determining all feedback loops of
+an ordinary differential equation (ODE) system at user-defined values of 
+the model parameters and of the modelled variables.
+
+The following call reports (up to 10) feedback loops for an ODE system 
+determined by a function, here the example function `func_POSm4`, at variable 
+values `s_star` (here, these are all equal to 1). Additional arguments to the 
+example function are supplied. 
+
+```{r quick_example}
+
+# Load example ODE system with function func_POSm4, 4 variables
+data("func_POSm4")
+# Example variable values
+s_star <- rep(1,4)
+# Further arguments of func_POSm4, in addition: time t as argument
+klin <- rep(1,8)
+knonlin <- c(2.5,3)
+
+# compute loops
+res_tab <- find_loops_vset(func_POSm4,vset=list(s_star),t=1,klin=klin,
+                           knonlin=knonlin,max_num_loops=10)
+# The loop list is reported
+res_tab$loop_rep[[1]]
+# This is the sixth loop of the list. It is a positive feedback loop (sign in 
+# the loop list equals +1) of length 3 in that variable 3 regulates variable 4, 
+# variable 4 regulates variable 2, and variable 2 regulates variable 3. 
+res_tab$loop_rep[[1]][6,]
+# The corresponding signed Jacobian matrix
+res_tab$jac_rep[[1]]
+```
+
+## Introduction
+
+Ordinary differential equation (ODE) models are used frequently to
+mathematically represent biological systems. Feedback loops are important 
+regulatory features of biological systems and can give rise to different
+dynamic behavior such as multistability for positive feedback loops or
+oscillations for negative feedback loops.
+
+The feedback loops in an ODE system can be detected with the help of its 
+Jacobian matrix, the matrix of partial derivatives of the variables. 
+It captures all interactions between the variables and gives rise to the
+interaction graph of the ODE model. In this graph, each modelled variable
+is a node and non-zero entries in the Jacobian matrix are (weighted) 
+edges of the graph. Interactions can be positive or negative, according 
+to the sign of the Jacobian matrix entry.
+
+Directed path detection in this graph is used to determine all feedback 
+loops (in graphs also called cycles or circuits) of the system. They are
+marked by a set of directed interactions forming a chain in which only 
+the first and the last node (variable) is the same. Thereby, self-loops 
+(loops of length one) can also occur.
+
+LoopDetectR allows for detection of all loops of the graph and also reports
+the sign of each loop, i.e. whether it is a positive feedback loop
+(the number of negative interactions is even) or a negative feedback loop 
+(the number of negative interactions is uneven).
+The output is a table that captures the order of the variables forming 
+the loop, their length and the sign of each loop. 
+
+Jacobian determination in LoopDetectR relies on the package `numDeriv`, and path 
+finding in graphs uses algorithms supplied in the package `igraph`. 
+
+## Solving the ODE model to generate variable values of interest
+
+Solving an ODE model can be performed with the package `deSolve`.
+Note: You can skip this step if you already have a point of interest in state 
+space, or if you want to use dummy values for the variables such as 
+`s_star <- 1:4`.
+
+```{r solving_ODE}
+# Load example ODE system with function func_POSm4, 
+# Positive feedback chain model from [Baum et al., 2016], 4 variables
+data(func_POSm4)
+# The function func_POSm4 returns a vector, but deSolve needs the vector within
+# a list as output. Therefore, we define a function that simply puts the output 
+# of func_POSm4 into a list:
+func_POSm4_list <- function(t,x,klin,knonlin){list(func_POSm4(t,x,klin,knonlin))}
+# Kinetic parameters of the model, supplied as arguments to func_POSm4
+klin <- c(165,0.044,0.27,550,5000,78,4.4,5.1)
+knonlin <- c(0.3,2)
+# Solve the system using deSolve
+sol <-  deSolve::ode(y = rep(1,4), times = seq(0,15,0.1), func = func_POSm4_list, 
+                     parms=klin, knonlin=knonlin)
+# The solution of the 4-variable system is oscillatory, showing only the first 
+# variable here
+plot(sol[,1],sol[,2],type='l',xlab='time',ylab ='variable 1')
+# Set the last point of the numeric solution as point of interest, omit the 
+# first column (it contains the time)
+s_star <- sol[dim(sol)[1],2:dim(sol)[2]]
+``` 
+
+State variable values of interest could be steady state values,
+values at a specific point in time (e.g. after a stimulus) or even a set 
+of values (see section *Determining loops over a set of variable values*). 
+
+
+## Calculating the Jacobian matrix
+
+The function `jacobian` from the `numDeriv` package can be used to determine 
+numerically the Jacobian matrix of an ODE system at a certain set of values 
+for the variables, `s_star`. 
+The approach is that of finite differences (with real step) or 
+complex step approach, the latter of which is supposed to deliver more exact 
+results [Martins et al., 2003]. 
+
+The input function, in the example `func_POSm4` (positive feedback chain model 
+from [Baum et al., 2016]) defines the time derivatives of the modelled variables 
+as a vector:  $f_i(s)=dS_i/dt$. Note that only those input arguments to the 
+function that encode the modelled variables (and hence in whose direction the 
+partial derivatives are taken) are allowed to be called `x`.
+
+```{r compute_jacobian}
+klin <- c(165,0.044,0.27,550,5000,78,4.4,5.1)
+knonlin <- c(0.3,2)
+j_matrix <- numDeriv::jacobian(func_POSm4,s_star,method="complex",
+                               t=1,klin=klin,knonlin=knonlin,)
+j_matrix
+signed_jacobian <- sign(j_matrix)
+```
+    
+The (i,j)th entry of the Jacobian matrix denotes the partial derivative
+of variable $S_i$ with respect to variable $S_j$, 
+$J_{ij}=\delta S_i/\delta S_j$, which is positive if $S_j$ has a direct positive 
+effect on $S_i$, negative if $S_j$ has a direct negative effect on $S_i$ and zero
+if $S_j$ does not have a direct effect on $S_i$. For example, the entry in row 2,
+column 4, $J_{24}$, of the `signed_jacobian` matrix above is positive, meaning that
+in the underlying ODE model, variable 4 positively regulates variable 1.
+    
+## Computing all feedback loops and useful functions for loop search
+
+The Jacobian matrix is used to compute feedback loops in the generated 
+interaction graph. The default function for this is `find_loops`, in that 
+strongly 
+connected components are determined to reduce runtime. For smaller
+systems, the function `find_loops_noscc` skips this step and thus can be
+faster. The optional second input argument, `max_num_loops`, sets an upper 
+limit to the number of detected and reported loops and thus can prevent overly 
+long runtime (but also potentially not all loops are returned).
+
+```{r find_loops}
+# Determine the loop_list from Jacobian matrix j_matrix
+loop_list <- find_loops(j_matrix)
+loop_list
+# The signed Jacobian matrix can be supplied instead, delivering the same results
+loop_list <- find_loops(signed_jacobian)
+loop_list
+```
+
+The output loop list is an R data.frame with one row for each detected loop. 
+The column 
+`loop` contains the order of the variables that form the loop (as vector in a
+list); `length` contains the loop length (i.e. the number of variables involved);
+`sign` denotes whether the loop is negative, `-1`, or positive, `1`.
+The data.frame can be queried as usual for single loops or loops of a certain 
+length or sign. 
+
+```{r retrieve_loops}
+# Retrieve fifth loop
+loop_list[5,1] 
+# In order to obtain the vector of the order of variables of a loop, you have to 
+# call the list element
+loop_list[5,1][[1]]
+# Retrieve all loops of length 4
+loop_list[loop_list$length==4,] 
+```
+
+The LoopDetectR function `loop_summary` provides a convenient report on total 
+number of loops, subdivided by their lengths (`len_i`) and signs (`all`, `pos`,
+`neg`).
+
+```{r loop_summary}
+loop_summary(loop_list)
+```
+
+One can filter the loop list for loops containing specific variables, for 
+example the one with index 2:
+
+```{r loops_with_specific_node}
+# Index of node of interest
+noi <- 2
+# Return all loops from loop_list containing node 2
+loop_list[vapply(loop_list$loop,function(x){noi %in% x},logical(1)),]
+```
+
+The LoopDetectR function `find_edge` can be used to search a loop list for loops 
+containing specific edges defined by the indices of the ingoing and outgoing 
+nodes. This example returns the indices of all loops with a regulation of node 
+3 by node 2. These are only two here.
+
+```{r find_edge}
+# Obtain the indices of the loops with edge '2 regulates 3' in loop_list 
+loop_edge_ind <- find_edge(loop_list,source_node=2,target_node=3);
+loops_with_edge_2_to_3 <- loop_list[loop_edge_ind,]
+loops_with_edge_2_to_3
+```
+
+Loop lists can be saved and loaded as R objects using the usual save (or 
+saveRDS) and load (loadRDS) R functions. Saving the loop list into table files 
+is possible, but the vectors containing the loops are saved as string 
+`"c(x,y,z)"` and need special handling when loading back into R or into other 
+programming language frameworks.
+
+```{r save_files}
+# This writes a file 'looplist_func_POSm4.RData'
+save(loop_list,file=file.path(tempdir(),'looplist_func_POSm4.RData')) 
+# This loads the object 'loop_list' into the workspace
+load(file.path(tempdir(),'looplist_func_POSm4.RData'))
+
+# This saves the loop list into a table with separation by tab
+write.table(loop_list,file=file.path(tempdir(),'looplist_func_POSm4.txt'),
+            sep='\t',quote=F,row.names=F)
+# This reads the loop list back into the R session, as object ll
+ll <- read.table(file.path(tempdir(),'looplist_func_POSm4.txt'),
+                 header=T,sep='\t')
+ll
+# This transforms the "c(x,y,z)"-entries into the format used by LoopDetectR
+ll$loop <- lapply(ll$loop,function(x){eval(parse(text=x))})
+ll
+```
+
+## Computing feedback loops over multiple sets of variable values of interest
+
+In this example of a model of the bacterial cell cycle [Li et al., 2008],
+it is demonstrated how feedback loops can be determined over multiple sets of
+variable values. Here, it is focused on the solution of the ODE
+systems along the time axis (provided as data in the package, 
+*li08_solution.RData*).
+
+```{r li_example}
+# Load in the example ODE model function func_li08, the kinetic parameters are
+# defined within the function, and the function returns a vector of the time
+# derivatives (in the same order as the modelled variables in the arguments)
+data("func_li08")
+# Load sets of variable values (solution to the ODE over time)
+data("li08_solution") #loads the data.frame li08_solution, columns: variables
+# Cast the solution into the correct list format and remove time (first column)
+li08_sol_list <- as.list(as.data.frame(t(li08_solution[,-1])))
+# Compute all different loop lists along the solution
+res_tab <- find_loops_vset(func_li08,vset=li08_sol_list,t=1,
+                           compute_full_list=FALSE)
+```
+
+The solutions of the example ODE model give rise to seven different loop lists 
+that are saved as elements of the list `res_tab$loop_rep`.
+Here, two examples of resulting loop lists are given (without
+self-loops).
+
+```{r example_loop_lists_li}
+loop_list_2 <- res_tab$loop_rep[[2]][res_tab$loop_rep[[2]]$length>1,]
+loop_list_2
+loop_list_7 <- res_tab$loop_rep[[7]][res_tab$loop_rep[[7]]$length>1,]
+loop_list_7
+```
+
+The entry `res_tab$loop_rep_index` is a vector of the same length as the 
+number of different states at which the loops were determined 
+(`length(li08_sol_list)`), and returns which entry of `res_tab$loop_rep` belongs
+to each input state.
+
+```{r example_li_index}
+# Determine the loop list belonging to the 10th up to 20th input state. 
+# It is loop_list_2 for all of these input states.
+res_tab$loop_rep_index[10:20]
+```
+
+Similarly, `res_tab$jac_rep` and `res_tab$jac_rep_index` capture the different
+Jacobian matrices and for each input state which Jacobian belongs to it.
+
+Results of this analysis could be plotted along the solution and analyzed
+further to discover reasons of changing loops. Please note that in order 
+to obtain the sample solution in *li08_solution.RData* also event functions
+are required; the solution cannot be retrieved from integrating 
+`func_li08` alone. Please refer to the model's publication [Li et al.,
+2008] for details.
+
+
+## Comparing two loop lists
+
+LoopDetectR provides a function for comparing the loops of two systems, 
+`compare_loop_list`. For a meaningful comparison, the loop indices in
+the compared systems should point to the same variables. This could be the case 
+when regulations change within one system between different sets of variables of 
+interest (along a dynamic trajectory, at different steady states of the system),
+or when comparing different systems in which one or more regulations are altered 
+(as in the below example the positive feedback chain model vs. the negative 
+feedback chain model, [Baum et al., 2016]).
+
+```{r compare_loops} 
+# Load the ODE function of the positive feedback chain model
+data(func_POSm4)
+# Set kinetic parameters
+klin <- c(165,0.044,0.27,550,5000,78,4.4,5.1)
+knonlin <- c(0.3,2)
+# Compute the Jacobian matrix of the system at the state [1,1,1,1]
+j_matrix <- numDeriv::jacobian(func_POSm4,rep(1,4),method="complex",
+                               t=1, klin=klin, knonlin=knonlin)
+# Compute all loops for this Jacobian
+loop_list_pos <- find_loops(j_matrix)
+
+# Function with negative regulation. The altered regulation affects 
+# two entries of the Jacobian matrix. Parameter values and the set of 
+# variable values remain identical.
+j_matrix_neg <- sign(j_matrix)
+j_matrix_neg[1:2,4] <- -sign(j_matrix[1:2,4])
+# Compute the loop list for this Jacobian with altered regulation
+loop_list_neg <- find_loops(j_matrix_neg);
+
+# Compute comparison
+comp_inds <- compare_loop_list(loop_list_pos,loop_list_neg)
+# Only the four self-loops remain identical in both systems (saved in ind_a_id).
+loop_list_pos[comp_inds$ind_a_id,]
+# ind_b_id saves the indices of the corresponding loops in the negatively 
+# regulated system.
+loop_list_neg[comp_inds$ind_b_id,]
+# Two loops are the same in both systems but they have switched their signs. 
+# Their indices in the first list are saved in ind_a_switch
+loop_list_pos[comp_inds$ind_a_switch,]
+# Their indices in the second list are saved in ind_b_switch 
+loop_list_neg[comp_inds$ind_b_switch,]
+# All loops in the positively regulated system do also occur in the negatively
+# regulated system, i.e. ind_a_notin is empty.
+comp_inds$ind_a_notin
+```
+
+## References
+
+Baum K, Politi AZ, Kofahl B, Steuer R, Wolf J. Feedback, Mass 
+Conservation and Reaction Kinetics Impact the Robustness of Cellular 
+Oscillations. PLoS Comput Biol. 2016;12(12):e1005298.
+
+Li S, Brazhnik P, Sobral B, Tyson JJ. A Quantitative Study of the 
+Division Cycle of Caulobacter crescentus Stalked Cells. Plos Comput Biol. 
+2008;4(1):e9.
+
+Martins JRRA, Sturdza P, Alonso JJ. The complex-step derivative 
+approximation. ACM Trans Math Softw. 2003;29(3):245–62.
